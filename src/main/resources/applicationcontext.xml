@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!--bean 豆-->
-    <bean id="floppyWriter" class="demo.c.FloppyWriter"/>
-    <bean id="usbWriter" class="demo.c.UsbWriter"/>
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/mvc
+      http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <bean id="business" class="demo.c.Business">
-        <!--<property name="deviceWriter" ref="floppyWriter"/>-->
-        <constructor-arg name="deviceWriter" ref="floppyWriter"/>
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
+    <!--<property name="driverClassName" value="${jdbc_driverClassName}"/>-->
+    <!--<property name="url" value="${jdbc_url}"/>-->
+    <!--<property name="username" value="${jdbc_username}"/>-->
+    <!--<property name="password" value="${jdbc_password}"/>-->
+    <!--</bean>-->
+
+    <bean id="dbcp" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc_driverClassName}"/>
+        <property name="url" value="${jdbc_url}"/>
+        <property name="username" value="${jdbc_username}"/>
+        <property name="password" value="${jdbc_password}"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dbcp"/>
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        <property name="typeAliasesPackage" value="demo.model"/>
+    </bean>
+
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
     </bean>
 </beans>
