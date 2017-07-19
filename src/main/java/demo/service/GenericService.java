@@ -1,13 +1,10 @@
-package demo.dao;
-import demo.model.User;
-
+package demo.service;
 import java.util.List;
 
 /**
- * Created by 齐琪 on 2017/7/17.
- *  ###通用的###数据库操作
+ * Created by 齐琪 on 2017/7/18.
  */
-public interface GenericDao<T> { // Model Entity Domain 域
+public interface GenericService<T> {
 
     void create(T t);
 
